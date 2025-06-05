@@ -1,3 +1,3 @@
 
-def evaluate_polynomial(x : float, coefs : list[float]) -> float:
-	return sum(coefs[i] * x**i for i in range(len(coefs)))
+def evaluate_polynomial(coeffs: list[float], x: float) -> float:
+	return sum(a * (x ** i) for i, a in enumerate(coeffs))

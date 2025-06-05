@@ -1,12 +1,12 @@
 from regression import (
-	linear_regression, multiple_regression
+	linear_regression, polynomial_regression
 )
 
-from r_squared import (
+from metrics import (
 	r_squared
 )
 
 
 __all__ : [
-	linear_regression, multiple_regression, r_squared
+	linear_regression, polynomial_regression, r_squared
 ]

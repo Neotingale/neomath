@@ -77,8 +77,6 @@ def jacobi(A, b, x0=None, tolerance=1e-6, iterations=100):
 	raise ValueError("Se llegó al límite de iteraciones")
 
 
-
-
 def gauss_seidel(A, b, x0=None, tolerance=1e-6, iterations=100):
 	n = len(A)
 	x = [0.0 for _ in range(n)] if x0 is None else x0[:]

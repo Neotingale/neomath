@@ -1,15 +1,24 @@
-from algebra import (
-	matrix
-)
-from calculus import *
-from constants import *
-from core import *
-from geometry import *
-from numerics import *
-from series import *
-from statistics import *
-from utils import *
+from algebra import matrix
+from constants import math_constants, physics_constants
+from core import expr, symbols, functions
+from numerics import evaluate_polynomial, bisection, secant, gauss_seidel, gauss_jordan, false_position, newton_raphson, jacobi, fixed_point
+from series import maclaurin
+from statistics import linear_regression, polynomial_regression, r_squared
+from utils import parabola_vertex
 
-__all__ : [
-	matrix, linear_regression, multiple_regression, r_squared
+__all__ = [
+	'matrix',
+
+	'math_constants', 'physics_constants',
+
+	'expr', 'symbols', 'functions',
+
+	'evaluate_polynomial', 'bisection', 'secant', 'gauss_seidel', 'gauss_jordan',
+	'false_position', 'newton_raphson', 'jacobi', 'fixed_point',
+
+	'maclaurin',
+
+	'linear_regression', 'polynomial_regression', 'r_squared',
+
+	'parabola_vertex'
 ]

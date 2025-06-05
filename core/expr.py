@@ -10,8 +10,8 @@ class Add:
         self.left = left
         self.right = right
 
-    def __repr__(self):
-        return f"({self.left} + {self.right})"
+    def __repr__(self) : return f"({self.left} + {self.right})"
+
 
 class Mul:
     """
@@ -25,8 +25,8 @@ class Mul:
         self.left = left
         self.right = right
 
-    def __repr__(self):
-        return f"({self.left} * {self.right})"
+    def __repr__(self) : return f"({self.left} * {self.right})"
+
 
 class Pow:
     """
@@ -40,5 +40,4 @@ class Pow:
         self.base = base
         self.exponent = exponent
 
-    def __repr__(self):
-        return f"({self.base}**{self.exponent})"
+    def __repr__(self) : return f"({self.base}**{self.exponent})"

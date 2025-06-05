@@ -1,5 +1,8 @@
-from .symbols import Symbol
+from symbols import Symbol
+from expr import Add, Mul, Pow
 
 __all__ : [
-	Symbol
+	'Symbol',
+
+	'Add', 'Mul', 'Pow'
 ]

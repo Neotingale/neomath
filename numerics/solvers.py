@@ -8,228 +8,115 @@ def bisection(f : float, a : float, b : float, tol=1e-6, max_iter=100) -> float:
 	raise ValueError("No converge")
 
 
-def false_rule(f_x_str : str, lower : float, upper : float, tolerance : float = 1e-6, iterations : int = 50, table : PrettyTable = None) :
-	"""
-	Metodo de la regla falsa.
+def false_position(f, a, b, tolerance=1e-6, iterations=50):
+	for i in range(iterations):
+		fa, fb = f(a), f(b)
+		c = (a * fb - b * fa) / (fb - fa)
+		fc = f(c)
 
-	:param f_x_str: La funcion a resolver en formato LaTeX
-	:param lower: Limite inferior del intervalo
-	:param upper: Limite superior del intervalo
-	:param tolerance: Tolerancia minima a error (Default: 1e-6)
-	:param iterations: Numero maximo de iteraciones (Default: 50)
-	:param table: Tabla donde se guardaran los datos (Default: None)
-	:return: Aproximacion de la raiz
-	"""
-	try :
-		x = Symbol('x')
-		f_x = parseLatex(f_x_str)
+		if abs(fc) < tolerance : return c
 
-		if table : table.field_names = [ "Iteracion", "Lower", "Upper", "Root", "f(Root)", "Error" ]
+		if fa * fc < 0 : b = c
+		else : a = c
 
-		for i in range(iterations) :
-			f_lower = f_x.subs(x, lower)
-			f_upper = f_x.subs(x, upper)
-			root = (lower * f_upper - upper * f_lower) / (f_upper - f_lower)
-			f_root = f_x.subs(x, root)
-			error = abs(f_root)
-
-			if table : table.add_row([ i + 1, lower, upper, root, f_root, error ])
-
-			if error < tolerance : return root
-
-			if f_lower * f_root < 0 : upper = root
-			else : lower = root
-
-		raise ValueError(f"Se llego al limite de iteraciones ({iterations})")
-	except Exception as e :
-		print(f"Error: {e}")
+	raise ValueError("Se llegó al límite de iteraciones")
 
 
-def static_point(g_x_str : str, x_0 : float, tolerance : float = 1e-6, iterations : int = 50, table : PrettyTable = None) :
-	"""
-	Metodo numerico del punto fijo.
+def fixed_point(g, x0, tolerance=1e-6, iterations=50):
+	for i in range(iterations):
+		x1 = g(x0)
+		error = abs(x1 - x0)
+		if error < tolerance : return x1
+		x0 = x1
 
-	:param g_x_str: La funcion g(x) en formato string
-	:param x_0: El valor inicial de x
-	:param tolerance: La tolerancia minima a error (Default: 1e-6)
-	:param iterations: Numero maximo de iteraciones (Default: 50)
-	:param table: La tabla donde se guardaran los datos (Default: None)
-	:return: Aproximacion de la raiz
-	"""
-	try :
-		x = Symbol('x')
-		g_x = parseLatex(g_x_str)
-
-		if table : table.field_names = [ "Iteracion", "x_0", "g(x)", "Error" ]
-
-		for i in range(iterations) :
-			x_1 = g_x.subs(x, x_0)
-			error = abs(x_1 - x_0)
-
-			if table : table.add_row([ i + 1, x_0, x_1, error ])
-
-			if error < tolerance : return x_1
-			x_0 = x_1
-
-		raise ValueError(f"Se llego al limite de iteraciones ({iterations})")
-	except Exception as e :
-		print(f"Error: {e}")
+	raise ValueError("Se llegó al límite de iteraciones")
 
 
-def newton_raphson(f_x_str : str, x_0 : float, tolerance : float = 1e-6, iterations : int = 50, table : PrettyTable = None) :
-	"""
-	Metodo de Newton-Raphson.
+def newton_raphson(f, f_prime, x0, tolerance=1e-6, iterations=50):
+	for i in range(iterations):
+		fx = f(x0)
+		dfx = f_prime(x0)
 
-	:param f_x_str: La función a resolver en formato LaTeX
-	:param x_0: Valor inicial de x
-	:param tolerance: Tolerancia mínima a error (Default: 1e-6)
-	:param iterations: Número máximo de iteraciones (Default: 50)
-	:param table: Tabla donde se guardarán los datos (Default: None)
-	:return: Aproximación de la raíz
-	"""
-	try :
-		x = Symbol('x')
-		f_x = parseLatex(f_x_str)
-		f_prime = diff(f_x, x)
+		if dfx == 0 : raise ValueError("Derivada es cero, método no aplicable")
 
-		if table : table.field_names = [ "Iteración", "x", "f(x)", "Error" ]
+		x1 = x0 - fx / dfx
+		error = abs(x1 - x0)
+		if error < tolerance : return x1
+		x0 = x1
 
-		for i in range(iterations) :
-			f_val = f_x.subs(x, x_0)
-			f_prime_val = f_prime.subs(x, x_0)
-
-			if f_prime_val == 0 : raise ValueError("La derivada es cero, método no aplicable.")
-
-			x_1 = x_0 - f_val / f_prime_val
-			error = abs(x_1 - x_0)
-
-			if table : table.add_row([ i + 1, x_0, f_val, error ])
-
-			if error < tolerance : return x_1
-			x_0 = x_1
-
-		raise ValueError(f"Se llegó al límite de iteraciones ({iterations})")
-	except Exception as e :
-		print(f"Error: {e}")
+	raise ValueError("Se llegó al límite de iteraciones")
 
 
-def sec(f_x_str : str, x_irem1 : float, x_i : float, tolerance : float = 1e-6, iterations : int = 20, table : PrettyTable = None) :
-	"""
-	Metodo de la secante.
+def secant(f, x0, x1, tolerance=1e-6, iterations=50):
+	for i in range(iterations):
+		fx0, fx1 = f(x0), f(x1)
+		if fx0 == fx1 : raise ValueError("División por cero")
 
-	:param f_x_str: La función a resolver en formato LaTeX
-	:param x_irem1: Valor de x_{-1}
-	:param x_i: Valor inicial de x_0
-	:param tolerance: Tolerancia mínima a error (Default: 1e-6)
-	:param iterations: Número máximo de iteraciones (Default: 20)
-	:param table: Tabla donde se guardarán los datos (Default: None)
-	:return: Aproximación de la raíz
-	"""
-	try :
-		x = Symbol('x')
-		f_x = parseLatex(f_x_str)
+		x2 = x1 - fx1 * (x1 - x0) / (fx1 - fx0)
+		error = abs(x2 - x1)
+		if error < tolerance : return x2
+		x0, x1 = x1, x2
 
-		if table : table.field_names = [ "Iteración", "x_{-1}", "x_0", "f(x_0)", "Error" ]
-
-		for i in range(iterations) :
-			f_x_irem1 = f_x.subs(x, x_irem1)
-			f_x_i = f_x.subs(x, x_i)
-
-			if f_x_irem1 == f_x_i : raise ValueError("División por cero detectada en el método de la secante.")
-
-			x_iadd1 = x_i - ((x_irem1 - x_i) * f_x_i) / (f_x_irem1 - f_x_i)
-			error = abs(x_iadd1 - x_i)
-
-			if table : table.add_row([ i + 1, x_irem1, x_i, f_x_i, error ])
-
-			if error < tolerance : return x_iadd1
-
-			x_irem1 = x_i
-			x_i = x_iadd1
-
-		raise ValueError(f"Se llegó al límite de iteraciones ({iterations})")
-	except Exception as e :
-		print(f"Error: {e}")
+	raise ValueError("Se llegó al límite de iteraciones")
 
 
-def jacobi(A: Matrix, b: Matrix, x0: Matrix = None, tolerance: float = 1e-6, iterations: int = 100, table: PrettyTable = None):
-	"""
-	Resuelve el sistema Ax = b usando el metodo de Jacobi.
+def jacobi(A, b, x0=None, tolerance=1e-6, iterations=100):
+	n = len(A)
+	x = [0.0 for _ in range(n)] if x0 is None else x0[:]
 
-	:param A: Matriz de coeficientes (sympy.Matrix).
-	:param b: Vector de términos independientes (sympy.Matrix).
-	:param x0: Vector inicial (sympy.Matrix, opcional).
-	:param tolerance: Tolerancia para la convergencia.
-	:param iterations: Número máximo de iteraciones.
-	:param table: Objeto PrettyTable para almacenar los resultados (opcional).
-	:return: Vector solución.
-	"""
-	n = A.shape[0]
-	x = Matrix.zeros(n, 1) if x0 is None else x0.copy()
-	D = Matrix.diag(*A.diagonal())
-	R = A - D
-
-	if table:
-		table.field_names = ["Iteración"] + [f"x{i+1}" for i in range(n)] + ["Error"]
-
-	for iteration in range(iterations):
-		x_new = D.inv() * (b - R * x)
-		error = max(abs(x_new[i] - x[i]) for i in range(n))
-
-		if table:
-			table.add_row([iteration + 1] + list(x_new) + [error])
-
-		if error < tolerance:
-			if table:
-				x_decimal = x_new.applyfunc(lambda v: float(v))
-				table.add_row(["Decimales"] + list(x_decimal) + ["-"])
-
-			return x_new
-
-		x = x_new
-
-	raise ValueError(f"Se llegó al límite de iteraciones ({iterations})")
-
-
-
-def gauss_seidel(A: Matrix, b: Matrix, x0: Matrix = None, tolerance: float = 1e-6, iterations: int = 100, table: PrettyTable = None):
-	"""
-	Resuelve el sistema Ax = b usando el metodo de Gauss-Seidel.
-
-	:param A: Matriz de coeficientes (sympy.Matrix).
-	:param b: Vector de términos independientes (sympy.Matrix).
-	:param x0: Vector inicial (sympy.Matrix, opcional).
-	:param tolerance: Tolerancia para la convergencia.
-	:param iterations: Número máximo de iteraciones.
-	:param table: Objeto PrettyTable para almacenar los resultados (opcional).
-	:return: Vector solución.
-	"""
-	n = A.shape[0]
-	x = Matrix.zeros(n, 1) if x0 is None else x0.copy()
-
-	if table:
-		table.field_names = ["Iteración"] + [f"x{i+1}" for i in range(n)] + ["Error"]
-
-	for iteration in range(iterations):
-		x_new = x.copy()
+	for _ in range(iterations):
+		x_new = x[:]
 		for i in range(n):
-			s1 = sum(A[i, j] * x_new[j] for j in range(i))
-			s2 = sum(A[i, j] * x[j] for j in range(i+1, n))
-			x_new[i] = (b[i] - s1 - s2) / A[i, i]
+			s = sum(A[i][j] * x[j] for j in range(n) if j != i)
+			x_new[i] = (b[i] - s) / A[i][i]
 
 		error = max(abs(x_new[i] - x[i]) for i in range(n))
-
-		if table:
-			table.add_row([iteration + 1] + list(x_new) + [error])
-
-		if error < tolerance:
-			if table:
-				x_decimal = x_new.applyfunc(lambda v: float(v))
-				table.add_row(["Decimales"] + list(x_decimal) + ["-"])
-
-			return x_new
-
+		if error < tolerance : return x_new
 		x = x_new
 
-	raise ValueError(f"Se llegó al límite de iteraciones ({iterations})")
+	raise ValueError("Se llegó al límite de iteraciones")
+
+
+
+
+def gauss_seidel(A, b, x0=None, tolerance=1e-6, iterations=100):
+	n = len(A)
+	x = [0.0 for _ in range(n)] if x0 is None else x0[:]
+
+	for _ in range(iterations):
+		x_new = x[:]
+		for i in range(n):
+			s1 = sum(A[i][j] * x_new[j] for j in range(i))
+			s2 = sum(A[i][j] * x[j] for j in range(i + 1, n))
+			x_new[i] = (b[i] - s1 - s2) / A[i][i]
+
+		error = max(abs(x_new[i] - x[i]) for i in range(n))
+		if error < tolerance : return x_new
+		x = x_new
+
+	raise ValueError("Se llegó al límite de iteraciones")
+
+
+def gauss_jordan(A: list[list[float]], b: list[float]) -> list[float]:
+	"""
+
+	"""
+	n = len(b)
+	M = [A[i][:] + [b[i]] for i in range(n)]
+
+	for i in range(n):
+		max_row = max(range(i, n), key=lambda r: abs(M[r][i]))
+		M[i], M[max_row] = M[max_row], M[i]
+
+		pivot = M[i][i]
+		if pivot == 0:
+			raise ValueError("No unique solution exists")
+		M[i] = [v / pivot for v in M[i]]
+
+		for j in range(n):
+			if j != i:
+				factor = M[j][i]
+				M[j] = [M[j][k] - factor * M[i][k] for k in range(n + 1)]
+
+	return [M[i][-1] for i in range(n)]
 

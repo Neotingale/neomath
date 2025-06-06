@@ -1,4 +1,4 @@
-from expr import Add, Mul, Pow
+from .expr import Add, Mul, Pow
 
 class Symbol:
 	def __init__(self, name : str):

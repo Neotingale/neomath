@@ -1,4 +1,4 @@
-from numerics.solvers import gauss_jordan
+from ..numerics.solvers import gauss_jordan
 
 
 def linear_regression(x : list[float], y : list[float]) -> tuple[float, float]:

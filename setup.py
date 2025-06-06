@@ -12,6 +12,8 @@ setup(
 	packages=find_packages(),
 	install_requires=[
 		'prettytable>=3.14.0',
+		'setuptools>=75.8.0',
+		'mkinit>=1.1.0,'
 	],
 	python_requires='>=3.8',
 	license='CC BY 4.0',
